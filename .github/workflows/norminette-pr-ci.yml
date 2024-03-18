@@ -1,0 +1,36 @@
+name: 'Norminette Check and Pull Request'
+
+on:
+  push:
+    branches-ignore:
+      - '2024/master'
+
+jobs:
+  norminette:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: 'actions/checkout@v4'
+
+      - name: 'Run norminette linter on the project files'
+        uses: 'alexandregv/norminette-action@v3'
+
+  pull-request:
+    needs: norminette
+
+    runs-on: ubuntu-latest
+    if: ${{ success() }}
+    steps:
+      - uses: 'actions/checkout@v4'
+
+      - name: 'Get the label for the pull request'
+        id: get_label
+        run: echo "label=$(echo ${{ github.ref_name }} | awk -F '/' '{print $(NF-1)}')" >> $GITHUB_OUTPUT
+
+      - name: 'Make a pull request to master branch'
+        uses: 'peter-evans/create-pull-request@v6'
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          branch: ${{ github.ref }}
+          base: '2024/master'
+          labels: ${{ steps.get_label.outputs.label }}
+          delete-branch: true
