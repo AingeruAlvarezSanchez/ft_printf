@@ -5,7 +5,7 @@ CFLAGS = -Wall -Werror -Wextra
 SANITIZE_FLAGS = -fsanitize=address -fsanitize=leak
 
 SRC = src/ft_printf.c
-OBJ = $(patsubst %.c, %.o, $(SRC))
+OBJ = $(patsubst src/%.c, obj/%.o, $(SRC))
 
 INCLUDE = -I./inc
 
@@ -21,7 +21,7 @@ $(OBJ): $(SRC)
 
 .PHONY: clean
 clean:
-	$(RM) $(OBJ)
+	$(RM) -r obj
 
 .PHONY: fclean
 fclean: clean
