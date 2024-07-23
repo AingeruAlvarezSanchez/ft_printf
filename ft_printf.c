@@ -11,6 +11,7 @@
 /* ************************************************************************** */
 
 #include "ft_printf.h"
+#include <stdint.h>
 
 int	ft_checkflags(int i, const char *str, va_list flags)
 {
